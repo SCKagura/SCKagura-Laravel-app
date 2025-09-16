@@ -63,4 +63,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(SocialLink::class);
     }
+    public function reminders()
+{
+    return $this->hasMany(\App\Models\Reminder::class);
+}
+
 }

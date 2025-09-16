@@ -15,4 +15,9 @@ use Illuminate\Database\Eloquent\Model;
 {
     return $this->morphedByMany(DiaryEntry::class, 'taggable')->withTimestamps();
 }
+public function reminders()
+{
+    return $this->morphedByMany(\App\Models\Reminder::class, 'taggable')->withTimestamps();
+}
+
  }
