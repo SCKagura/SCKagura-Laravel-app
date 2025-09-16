@@ -18,4 +18,10 @@ class DiaryEntry extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function emotions()
+{
+    return $this->belongsToMany(Emotion::class, 'diary_entry_emotions', 'diary_entry_id', 'emotion_id')
+                ->withPivot('intensity')
+                ->withTimestamps();
+}
 }

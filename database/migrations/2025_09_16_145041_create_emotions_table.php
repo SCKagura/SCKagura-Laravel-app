@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
 {
-    // Create DiaryEntries table
-    Schema::create('diary_entries', function (Blueprint $table) {
+    Schema::create('emotions', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
-        $table->date('date');
-        $table->text('content');
+        $table->string('name');
+        $table->text('description')->nullable();
         $table->timestamps();
     });
 }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('diary_entries');
+        Schema::dropIfExists('emotions');
     }
 };
