@@ -60,7 +60,6 @@
                                 @foreach ($emotions as $emotion)
                                     @php
                                         $checked = in_array($emotion->id, $selectedIds, true);
-                                        // กัน null เวลาไม่มีความสัมพันธ์อารมณ์นี้มาก่อน
                                         $pivotIntensity = $diaryEntry->emotions->find($emotion->id)?->pivot?->intensity;
                                         $intVal = old('intensity.' . $emotion->id, $pivotIntensity);
                                     @endphp
@@ -69,8 +68,7 @@
                                         class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/40 cursor-pointer">
                                         <input type="checkbox"
                                             id="emotion_{{ $emotion->id }}"
-                                            name="emotions[]"
-                                            value="{{ $emotion->id }}"
+                                            name="emotions[]" value="{{ $emotion->id }}"
                                             class="h-5 w-5 text-indigo-600 rounded border-gray-300"
                                             {{ $checked ? 'checked' : '' }}
                                             onchange="toggleIntensityInput({{ $emotion->id }})">
@@ -81,8 +79,7 @@
                                                 name="intensity[{{ $emotion->id }}]"
                                                 class="w-24 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500"
                                                 placeholder="1-10" min="1" max="10"
-                                                value="{{ $intVal }}"
-                                                {{ $checked ? 'required' : '' }}>
+                                                value="{{ $intVal }}" {{ $checked ? 'required' : '' }}>
                                         </div>
                                     </label>
                                 @endforeach
@@ -91,6 +88,34 @@
                             @error('emotions')
                                 <div class="text-red-500 text-sm mt-2">{{ $message }}</div>
                             @enderror
+                        </div>
+
+                        {{-- Tags (morphToMany) --}}
+                        <div class="mb-6">
+                            <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    {{ __('Select Tags') }}
+                                </label>
+
+                                @php
+                                    $checkedTags = (array) old('tags', $diaryEntry->tags->pluck('id')->toArray());
+                                @endphp
+
+                                <div class="flex flex-wrap">
+                                    @foreach ($tags as $tag)
+                                        <label for="tag_{{ $tag->id }}" class="mr-4 mb-2 inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="tag_{{ $tag->id }}" name="tags[]"
+                                                value="{{ $tag->id }}"
+                                                class="h-5 w-5 text-indigo-600 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+                                                {{ in_array($tag->id, $checkedTags, true) ? 'checked' : '' }}>
+                                            <span class="ml-2 text-sm">{{ $tag->name }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                                @error('tags')
+                                    <div class="text-red-500 text-sm mt-2">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
                         <x-primary-button>{{ __('Update Entry') }}</x-primary-button>

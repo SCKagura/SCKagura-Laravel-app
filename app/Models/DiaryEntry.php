@@ -24,4 +24,8 @@ class DiaryEntry extends Model
                 ->withPivot('intensity')
                 ->withTimestamps();
 }
+ public function tags()
+ {
+     return $this->morphToMany(Tag::class, 'taggable')->withTimestamps();
+ }
 }
