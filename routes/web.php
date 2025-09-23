@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;        // ต้องมี use นี
 use App\Http\Controllers\DiaryEntryController;
 use App\Http\Controllers\SocialLinkController;
 use App\Http\Controllers\ReminderController;
+use App\Http\Controllers\ConflictController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('diary',        DiaryEntryController::class);
     Route::resource('social-links', SocialLinkController::class);
     Route::resource('reminders',    ReminderController::class); // ถ้าไม่ใช้ show ให้ ->except(['show'])
+
+
+     Route::get('/conflicts', [ConflictController::class, 'index'])
+        ->name('conflicts.index');
+
 });
 
 // auth routes (login / register / password reset)

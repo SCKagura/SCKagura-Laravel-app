@@ -7,19 +7,42 @@ use App\Models\DiaryEntry;
 use Illuminate\Http\Request;
 use App\Models\Emotion;
 use App\Models\Tag;
+use Illuminate\Support\Facades\DB;
+
 class DiaryEntryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-{
-    $diaryEntries = Auth::user()->diaryEntries()
-    ->with('emotions', 'tags') // Eager load emotions and tags
-    ->orderBy('date', 'desc')
-    ->get();
-    return view('diary.index', compact('diaryEntries'));
-}
+     public function index()
+ {
+     // Get the paginated diary entries with their associated emotions
+     $diaryEntries = Auth::user()->diaryEntries()
+         ->with('emotions', 'tags')
+         ->orderBy('date', 'desc')
+         ->paginate(5);
+
+     // Get the logged-in user ID. Stores the current user’s ID in $userId for raw query builder usage.
+     $userId = Auth::id();
+
+     // Count how many diaries are related to each emotion
+     $emotionCounts = DB::table('diary_entry_emotions as dee')
+         ->join('diary_entries as de', 'dee.diary_entry_id', '=', 'de.id')
+         ->select('dee.emotion_id', DB::raw('count(dee.diary_entry_id) as diary_count'))
+         ->where('de.user_id', $userId)
+         ->whereIn('dee.emotion_id', [1, 2, 3, 4, 5])
+         ->groupBy('dee.emotion_id')
+         ->get();
+
+     // Convert the data into a PHP array
+     $summary = [];
+     foreach ($emotionCounts as $count) {
+         $summary[$count->emotion_id] = $count->diary_count;
+     }
+
+     // Return the view with both diary entries and summary data
+     return view('diary.index', compact('diaryEntries', 'summary'));
+ }
 
     /**
      * Show the form for creating a new resource.

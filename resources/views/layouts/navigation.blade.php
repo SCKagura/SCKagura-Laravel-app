@@ -27,6 +27,11 @@
                     <x-nav-link :href="route('reminders.index')" :active="request()->routeIs('reminders.*')">
                         {{ __('Reminders') }}
                     </x-nav-link>
+
+                    <!-- ✅ เพิ่มเมนู Conflict -->
+                    <x-nav-link :href="route('conflicts.index')" :active="request()->routeIs('conflicts.*')">
+                        {{ __('Get Conflict') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -90,6 +95,11 @@
 
             <x-responsive-nav-link :href="route('reminders.index')" :active="request()->routeIs('reminders.*')">
                 {{ __('Reminders') }}
+            </x-responsive-nav-link>
+
+            <!-- ✅ เพิ่มเมนู Conflict ใน mobile ด้วย -->
+            <x-responsive-nav-link :href="route('conflicts.index')" :active="request()->routeIs('conflicts.*')">
+                {{ __('Get Conflict') }}
             </x-responsive-nav-link>
         </div>
 
